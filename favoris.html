@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Favoris - Orakel</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@1,400;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;font-style:italic;background:#f5f5f5;color:#222;}
+.header{background:#1B3A8C;padding:10px 16px;display:flex;align-items:center;gap:12px;}
+.back-btn{background:rgba(255,255,255,.15);border:none;border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.header-title{color:#fff;font-size:16px;font-weight:900;}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 24px;text-align:center;}
+.empty svg{opacity:.12;margin-bottom:20px;}
+.empty h2{font-size:20px;font-weight:900;color:#333;margin-bottom:8px;}
+.empty p{font-size:14px;color:#888;margin-bottom:24px;}
+.btn{display:inline-block;padding:14px 32px;background:#1B3A8C;color:#fff;border-radius:14px;text-decoration:none;font-size:14px;font-weight:900;}
+.products-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 12px;}
+.product-card{border:1px solid #eee;border-radius:12px;overflow:hidden;background:#fff;text-decoration:none;color:inherit;display:block;}
+.product-img{width:100%;aspect-ratio:1;object-fit:cover;background:#f5f5f5;}
+.product-img-placeholder{width:100%;aspect-ratio:1;background:linear-gradient(135deg,#f0f0ff,#e0e0ff);display:flex;align-items:center;justify-content:center;font-size:36px;}
+.product-info{padding:10px;}
+.product-name{font-size:12px;font-weight:700;color:#222;margin-bottom:4px;line-height:1.3;}
+.product-price{font-size:14px;font-weight:900;color:#1B3A8C;}
+.remove-btn{width:100%;padding:7px;background:#fff0f0;color:#e8002d;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-style:italic;font-size:11px;font-weight:800;cursor:pointer;margin-top:6px;}
+.bottom-spacer{height:70px;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;display:flex;z-index:100;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px;color:#999;font-size:10px;font-weight:700;text-decoration:none;gap:3px;}
+.nav-item.active{color:#1B3A8C;}
+.nav-item svg{width:22px;height:22px;stroke:currentColor;}
+</style>
+</head>
+<body>
+<div class="header">
+  <button class="back-btn" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" width="20" height="20"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
+  <span class="header-title">Mes Favoris <span id="count" style="font-size:13px;opacity:.8;"></span></span>
+</div>
+<div id="content"></div>
+<div class="bottom-spacer"></div>
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Accueil</a>
+  <a href="categorie.html" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Catégories</a>
+  <a href="panier.html" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>Panier</a>
+  <a href="compte.html" class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Compte</a>
+</nav>
+<script>
+const KEY = 'orakel_favoris';
+const fmt = n => new Intl.NumberFormat('fr-FR').format(n) + ' F';
+function getFavs() { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
+function removeFav(id) {
+  const favs = getFavs().filter(f => f.id !== id);
+  localStorage.setItem(KEY, JSON.stringify(favs));
+  render();
+}
+function render() {
+  const favs = getFavs();
+  const c = document.getElementById('count');
+  c.textContent = favs.length > 0 ? `(${favs.length})` : '';
+  const el = document.getElementById('content');
+  if (!favs.length) {
+    el.innerHTML = `<div class="empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#e8002d" stroke-width="1.5" width="80" height="80"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      <h2>Pas encore de favoris</h2>
+      <p>Appuyez sur <svg viewBox="0 0 24 24" fill="#e8002d" stroke="#e8002d" stroke-width="1.5" width="16" height="16" style="vertical-align:middle;"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg> sur un produit pour l'ajouter ici</p>
+      <a class="btn" href="index.html">Explorer les produits</a>
+    </div>`;
+    return;
+  }
+  el.innerHTML = `<div class="products-grid">${favs.map(p => `
+    <div class="product-card">
+      <a href="produit.html?id=${p.id}">${p.image ? `<img class="product-img" src="${p.image}" loading="lazy">` : '<div class="product-img-placeholder">🛍️</div>'}</a>
+      <div class="product-info">
+        <p class="product-name">${p.name}</p>
+        <p class="product-price">${fmt(p.price)}</p>
+        <button class="remove-btn" onclick="removeFav('${p.id}')">🗑️ Retirer</button>
+      </div>
+    </div>`).join('')}</div>`;
+}
+window.removeFav = removeFav;
+render();
+</script>
+</body></html>
