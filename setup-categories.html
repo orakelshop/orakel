@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Setup Catégories - Orakel</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Arial,sans-serif;background:#f5f5f5;padding:20px;}
+.container{max-width:600px;margin:0 auto;background:#fff;border-radius:14px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.1);}
+h1{color:#1B3A8C;font-size:20px;margin-bottom:8px;}
+p{color:#666;font-size:13px;margin-bottom:20px;}
+.btn{width:100%;padding:16px;background:#1B3A8C;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;}
+.btn:hover{background:#2650c8;}
+.btn:disabled{background:#ccc;cursor:not-allowed;}
+.log{margin-top:16px;background:#f9f9f9;border-radius:8px;padding:12px;max-height:300px;overflow-y:auto;}
+.log-item{font-size:12px;padding:4px 0;border-bottom:1px solid #eee;}
+.log-item.success{color:#16a34a;}
+.log-item.error{color:#e8002d;}
+.log-item.info{color:#1B3A8C;}
+.progress{margin-top:12px;background:#eee;border-radius:10px;height:8px;}
+.progress-bar{background:#1B3A8C;height:8px;border-radius:10px;transition:width .3s;width:0%;}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Setup des 21 catégories Orakel</h1>
+  <p>Clique sur le bouton pour créer automatiquement les 21 catégories dans Firebase. Tu pourras ensuite ajouter les bannières depuis l'admin.</p>
+  <button class="btn" id="setupBtn" onclick="setupCategories()">Créer les 21 catégories</button>
+  <div class="progress" style="display:none;" id="progressBar">
+    <div class="progress-bar" id="progressFill"></div>
+  </div>
+  <div class="log" id="log" style="display:none;"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, setDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey: "AIzaSyA-nTe9-e0YRHNiYecTqunP2yf_g_p9GBU",
+  authDomain: "orakelci.firebaseapp.com",
+  projectId: "orakelci",
+  storageBucket: "orakelci.firebasestorage.app",
+  messagingSenderId: "112433791052",
+  appId: "1:112433791052:web:cdb466e52548d4c7b374e9"
+});
+const db = getFirestore(app);
+
+const categories = [
+  { slug: 'telephones', name: 'Téléphones' },
+  { slug: 'informatique', name: 'Informatique' },
+  { slug: 'tv-son', name: 'TV & Son' },
+  { slug: 'electromenager', name: 'Électroménager' },
+  { slug: 'mode', name: 'Mode' },
+  { slug: 'chaussures', name: 'Chaussures' },
+  { slug: 'beaute', name: 'Beauté & Parfums' },
+  { slug: 'sante', name: 'Santé' },
+  { slug: 'maison', name: 'Maison & Déco' },
+  { slug: 'jardin', name: 'Jardin' },
+  { slug: 'sport', name: 'Sport & Loisirs' },
+  { slug: 'jouets', name: 'Enfants & Jouets' },
+  { slug: 'jeux-video', name: 'Jeux Vidéo' },
+  { slug: 'bricolage', name: 'Bricolage' },
+  { slug: 'auto', name: 'Auto & Moto' },
+  { slug: 'alimentation', name: 'Alimentation' },
+  { slug: 'animalerie', name: 'Animalerie' },
+  { slug: 'forfait-mobile', name: 'Forfait Mobile' },
+  { slug: 'voyage', name: 'Voyage' },
+  { slug: 'livres', name: 'Livres' },
+  { slug: 'promo', name: 'Promo' },
+];
+
+function log(msg, type='info') {
+  const logEl = document.getElementById('log');
+  logEl.style.display = 'block';
+  const item = document.createElement('div');
+  item.className = 'log-item ' + type;
+  item.textContent = msg;
+  logEl.appendChild(item);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+window.setupCategories = async function() {
+  const btn = document.getElementById('setupBtn');
+  const progressBar = document.getElementById('progressBar');
+  const progressFill = document.getElementById('progressFill');
+  
+  btn.disabled = true;
+  btn.textContent = 'Création en cours...';
+  progressBar.style.display = 'block';
+  
+  log('Démarrage de la création des 21 catégories...', 'info');
+  
+  let success = 0;
+  let errors = 0;
+  
+  for (let i = 0; i < categories.length; i++) {
+    const cat = categories[i];
+    try {
+      await setDoc(doc(db, 'categories', cat.slug), {
+        name: cat.name,
+        slug: cat.slug,
+        image: '',
+        banner: '',
+        createdAt: serverTimestamp()
+      });
+      success++;
+      log(`✅ ${cat.name} créée`, 'success');
+    } catch(e) {
+      errors++;
+      log(`❌ Erreur ${cat.name}: ${e.message}`, 'error');
+    }
+    
+    const progress = Math.round(((i+1) / categories.length) * 100);
+    progressFill.style.width = progress + '%';
+  }
+  
+  if (errors === 0) {
+    log(`\n🎉 Terminé ! ${success} catégories créées avec succès.`, 'success');
+    log('Va dans l\'admin → Catégories pour ajouter les bannières.', 'info');
+    btn.textContent = '✅ Terminé !';
+    btn.style.background = '#16a34a';
+  } else {
+    log(`Terminé avec ${errors} erreur(s). ${success} catégories créées.`, 'error');
+    btn.textContent = 'Réessayer';
+    btn.disabled = false;
+  }
+};
+</script>
+</body>
+</html>
