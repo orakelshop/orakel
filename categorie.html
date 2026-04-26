@@ -87,7 +87,7 @@ body{font-family:'Nunito',sans-serif;font-style:italic;background:#f5f5f5;color:
     <button class="back-btn" onclick="history.back()">
       <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" width="20" height="20"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
     </button>
-    <span class="header-title" id="pageTitle">Catégories</span>
+    <a href="index.html" class="header-title" style="text-decoration:none;color:#fff;" id="pageTitle">Catégories</span>
     <a href="panier.html" class="cart-btn">
       <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" width="22" height="22"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
       <span class="cart-badge" id="cartBadge"></span>
@@ -118,6 +118,11 @@ body{font-family:'Nunito',sans-serif;font-style:italic;background:#f5f5f5;color:
     <option value="price_desc">Prix décroissant</option>
     <option value="name_asc">A → Z</option>
   </select>
+</div>
+
+<!-- BANNIÈRE CATÉGORIE -->
+<div id="catBannerSection" style="display:none;margin-bottom:0;">
+  <img id="catBannerImg" src="" alt="" style="width:100%;max-height:180px;object-fit:cover;display:block;">
 </div>
 
 <!-- SOUS-CATÉGORIES VISUELLES -->
@@ -299,28 +304,34 @@ async function loadSubcategories() {
     const cards = document.getElementById('subcatCards');
     section.style.display = 'block';
     
-    // Récupérer l'image depuis les sous-catégories de la catégorie parente
-    // On prend la première sous-catégorie disponible comme image représentative
+    // Récupérer bannière + image depuis Firebase categories
     let catImage = '';
+    let catBanner = '';
     try {
-      // D'abord chercher dans collection categories
       const catSnap = await getDocs(collection(db, 'categories'));
       catSnap.forEach(d => {
         const c = d.data();
         if (c.slug === catSlug || c.value === catSlug || c.name?.toLowerCase() === catSlug.toLowerCase()) {
           catImage = c.image || '';
+          catBanner = c.banner || '';
         }
       });
-      
-      // Sinon prendre la première sous-catégorie comme image du bouton Tous
-      if (!catImage) {
-        const subSnap = await getDocs(query(collection(db, 'subcategories'), where('parent', '==', catSlug)));
-        if (!subSnap.empty) {
-          catImage = subSnap.docs[0].data().image || '';
-        }
+
+      // Afficher la bannière si elle existe
+      if (catBanner) {
+        const bannerSection = document.getElementById('catBannerSection');
+        const bannerImg = document.getElementById('catBannerImg');
+        bannerSection.style.display = 'block';
+        bannerImg.src = catBanner;
       }
 
-      // Sinon prendre le premier produit de la catégorie
+      // Fallback image depuis sous-catégories
+      if (!catImage) {
+        const subSnap = await getDocs(query(collection(db, 'subcategories'), where('parent', '==', catSlug)));
+        if (!subSnap.empty) catImage = subSnap.docs[0].data().image || '';
+      }
+
+      // Fallback image depuis produits
       if (!catImage && allProducts.length > 0) {
         catImage = allProducts[0].image || '';
       }
