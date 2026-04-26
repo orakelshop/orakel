@@ -1886,6 +1886,19 @@ window.saveBrand = async function() {
     loadBrands();
   } catch(e) { showToast('Erreur: ' + e.message, 'error'); }
 };
+
+window.handleCatBannerUpload = function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('catBannerUrl').value = e.target.result;
+    const p = document.getElementById('catBannerPreview');
+    p.src = e.target.result;
+    p.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+};
 </script>
 
 <!-- WHATSAPP FLOAT -->
