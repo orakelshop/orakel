@@ -1,6 +1,6 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://orakelshop.netlify.app/sitemap.xml
+Sitemap: https://orakelshop.github.io/orakel/sitemap.xml
 
 Disallow: /admin.html
