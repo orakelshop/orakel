@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://orakelshop.netlify.app/index.html</loc><priority>1.0</priority><changefreq>daily</changefreq></url>
-  <url><loc>https://orakelshop.netlify.app/categorie.html</loc><priority>0.9</priority><changefreq>daily</changefreq></url>
-  <url><loc>https://orakelshop.netlify.app/recherche.html</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://orakelshop.netlify.app/panier.html</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://orakelshop.netlify.app/commande.html</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://orakelshop.netlify.app/contact.html</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://orakelshop.netlify.app/livraison.html</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://orakelshop.netlify.app/a-propos.html</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://orakelshop.netlify.app/retours.html</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://orakelshop.netlify.app/cgv.html</loc><priority>0.4</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://orakelshop.netlify.app/confidentialite.html</loc><priority>0.4</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://orakelshop.github.io/orakel/index.html</loc><priority>1.0</priority><changefreq>daily</changefreq></url>
+  <url><loc>https://orakelshop.github.io/orakel/categorie.html</loc><priority>0.9</priority><changefreq>daily</changefreq></url>
+  <url><loc>https://orakelshop.github.io/orakel/recherche.html</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://orakelshop.github.io/orakel/panier.html</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://orakelshop.github.io/orakel/commande.html</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://orakelshop.github.io/orakel/contact.html</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://orakelshop.github.io/orakel/livraison.html</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://orakelshop.github.io/orakel/a-propos.html</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://orakelshop.github.io/orakel/retours.html</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://orakelshop.github.io/orakel/cgv.html</loc><priority>0.4</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://orakelshop.github.io/orakel/confidentialite.html</loc><priority>0.4</priority><changefreq>monthly</changefreq></url>
 </urlset>
