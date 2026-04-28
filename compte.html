@@ -5,18 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mon Compte - Orakel</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Nunito',sans-serif;font-style:italic;background:#f5f5f5;color:#222;}
 .header{background:#1B3A8C;padding:10px 16px;display:flex;align-items:center;gap:12px;}
 .back-btn{background:rgba(255,255,255,.15);border:none;border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
-.header-title{color:#fff;font-size:16px;font-weight:900;flex:1;text-align:center;}
 .tabs{display:flex;background:#fff;border-bottom:2px solid #eee;}
 .tab{flex:1;padding:14px;text-align:center;font-size:14px;font-weight:800;color:#999;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;}
 .tab.active{color:#1B3A8C;border-bottom-color:#1B3A8C;}
 .hero{background:linear-gradient(135deg,#1B3A8C,#2650c8);padding:28px 24px;text-align:center;}
 .avatar-circle{width:80px;height:80px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;}
-.avatar-circle img{width:52px;height:52px;object-fit:contain;}
 .hero h2{color:#fff;font-size:18px;font-weight:900;margin-bottom:4px;}
 .hero p{color:rgba(255,255,255,.8);font-size:13px;}
 .form-section{background:#fff;margin:10px 12px;border-radius:14px;padding:20px;}
@@ -61,6 +62,7 @@ body{font-family:'Nunito',sans-serif;font-style:italic;background:#f5f5f5;color:
 </style>
 </head>
 <body>
+
 <div class="header">
   <button class="back-btn" onclick="history.back()"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" width="20" height="20"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>
   <a href="index.html" style="flex:1;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;">
@@ -73,16 +75,16 @@ body{font-family:'Nunito',sans-serif;font-style:italic;background:#f5f5f5;color:
 <!-- VUE NON CONNECTÉ -->
 <div id="viewGuest">
   <div class="tabs">
-    <div class="tab active" id="tabLogin">Se connecter</div>
-    <div class="tab" id="tabSignup">Créer un compte</div>
+    <div class="tab active" id="tabLogin" onclick="switchTab('login')">Se connecter</div>
+    <div class="tab" id="tabSignup" onclick="switchTab('signup')">Créer un compte</div>
   </div>
   <div id="formLogin">
     <div class="form-section">
       <h3>Bon retour sur Orakel</h3>
       <div class="form-group"><label class="form-label">Email *</label><input type="email" id="loginEmail" class="form-input" placeholder="vous@email.com"></div>
       <div class="form-group"><label class="form-label">Mot de passe *</label><input type="password" id="loginPassword" class="form-input" placeholder="••••••••"><div class="error-msg" id="loginError"></div></div>
-      <button class="btn-primary" id="loginBtn">Se connecter</button>
-      <span class="forgot-link" id="forgotLink">Mot de passe oublié ?</span>
+      <button class="btn-primary" onclick="doLogin()">Se connecter</button>
+      <span class="forgot-link" onclick="doResetPassword()">Mot de passe oublié ?</span>
     </div>
     <div class="divider">ou</div>
     <div style="margin:0 12px 10px;"><button class="btn-outline" onclick="location.href='panier.html'">Continuer sans compte</button></div>
@@ -100,7 +102,7 @@ body{font-family:'Nunito',sans-serif;font-style:italic;background:#f5f5f5;color:
       <div class="form-group"><label class="form-label">Téléphone *</label><input type="tel" id="signupPhone" class="form-input" placeholder="+225 07 XX XX XX"></div>
       <div class="form-group"><label class="form-label">Email *</label><input type="email" id="signupEmail" class="form-input" placeholder="vous@email.com"></div>
       <div class="form-group"><label class="form-label">Mot de passe *</label><input type="password" id="signupPassword" class="form-input" placeholder="Minimum 6 caractères"><div class="error-msg" id="signupError"></div></div>
-      <button class="btn-primary" id="signupBtn">Créer mon compte</button>
+      <button class="btn-primary" onclick="doSignup()">Créer mon compte</button>
     </div>
   </div>
 </div>
@@ -108,15 +110,15 @@ body{font-family:'Nunito',sans-serif;font-style:italic;background:#f5f5f5;color:
 <!-- VUE CONNECTÉ -->
 <div id="viewUser" style="display:none;">
   <div class="hero">
-    <div class="avatar-circle"><img src="orakel-icon.png" alt="Orakel"></div>
+    <div class="avatar-circle"><svg viewBox="0 0 24 24" fill="none" stroke="#1B3A8C" stroke-width="2" width="40" height="40"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
     <h2 id="userName">Mon Compte</h2>
     <p id="userEmail"></p>
   </div>
   <div id="mainMenu">
     <div class="menu-list">
-      <div class="menu-item" >
+      <div class="menu-item" onclick="showOrders()">
         <div class="menu-icon" style="background:#e8f0ff;"><svg viewBox="0 0 24 24" fill="none" stroke="#1B3A8C" stroke-width="2" width="18" height="18"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg></div>
-        <span class="menu-text" id="showOrdersBtn">Mes commandes</span>
+        <span class="menu-text">Mes commandes</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg>
       </div>
       <a class="menu-item" href="favoris.html">
@@ -129,20 +131,15 @@ body{font-family:'Nunito',sans-serif;font-style:italic;background:#f5f5f5;color:
         <span class="menu-text">Mon panier</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg>
       </a>
-      <a class="menu-item" href="contact.html">
-        <div class="menu-icon" style="background:#f0f0ff;"><svg viewBox="0 0 24 24" fill="none" stroke="#1B3A8C" stroke-width="2" width="18" height="18"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-        <span class="menu-text">Nous contacter</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg>
-      </a>
-      <div class="menu-item" >
+      <div class="menu-item" onclick="doLogout()">
         <div class="menu-icon" style="background:#fef2f2;"><svg viewBox="0 0 24 24" fill="none" stroke="#e8002d" stroke-width="2" width="18" height="18"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div>
-        <span class="menu-text" style="color:#e8002d;" id="logoutBtn">Se déconnecter</span>
+        <span class="menu-text" style="color:#e8002d;">Se déconnecter</span>
       </div>
     </div>
   </div>
   <div id="ordersView" style="display:none;padding-top:10px;">
     <div style="display:flex;align-items:center;gap:10px;padding:0 16px 10px;">
-      <button  style="background:none;border:none;cursor:pointer;color:#1B3A8C;font-size:13px;font-weight:800;font-family:'Nunito',sans-serif;font-style:italic;" id="hideOrdersBtn">← Retour</button>
+      <button onclick="hideOrders()" style="background:none;border:none;cursor:pointer;color:#1B3A8C;font-size:13px;font-weight:800;font-family:'Nunito',sans-serif;font-style:italic;">← Retour</button>
       <span style="font-size:15px;font-weight:900;">Mes commandes</span>
     </div>
     <div id="ordersList"></div>
@@ -158,148 +155,129 @@ body{font-family:'Nunito',sans-serif;font-style:italic;background:#f5f5f5;color:
 </nav>
 <div class="toast" id="toast"></div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, query, where, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const app = initializeApp({
-  apiKey:"AIzaSyA-nTe9-e0YRHNiYecTqunP2yf_g_p9GBU",
-  authDomain:"orakelci.firebaseapp.com",
-  projectId:"orakelci",
-  storageBucket:"orakelci.firebasestorage.app",
-  messagingSenderId:"112433791052",
-  appId:"1:112433791052:web:cdb466e52548d4c7b374e9"
+<script>
+firebase.initializeApp({
+  apiKey: "AIzaSyA-nTe9-e0YRHNiYecTqunP2yf_g_p9GBU",
+  authDomain: "orakelci.firebaseapp.com",
+  projectId: "orakelci",
+  storageBucket: "orakelci.firebasestorage.app",
+  messagingSenderId: "112433791052",
+  appId: "1:112433791052:web:cdb466e52548d4c7b374e9"
 });
-const auth = getAuth(app);
-const db = getFirestore(app);
-const fmt = n => new Intl.NumberFormat('fr-FR').format(n) + ' F';
+var auth = firebase.auth();
+var db = firebase.firestore();
 
-function showToast(msg, type='') {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast ' + type; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast '+(type||''); t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
-onAuthStateChanged(auth, user => {
-  if (user) {
-    document.getElementById('viewGuest').style.display = 'none';
-    document.getElementById('viewUser').style.display = 'block';
-    document.getElementById('userName').textContent = user.displayName || 'Mon Compte';
-    document.getElementById('userEmail').textContent = user.email;
+function switchTab(tab) {
+  document.getElementById('tabLogin').className = 'tab'+(tab==='login'?' active':'');
+  document.getElementById('tabSignup').className = 'tab'+(tab==='signup'?' active':'');
+  document.getElementById('formLogin').style.display = tab==='login'?'block':'none';
+  document.getElementById('formSignup').style.display = tab==='signup'?'block':'none';
+}
+
+function doLogin() {
+  var email = document.getElementById('loginEmail').value.trim();
+  var password = document.getElementById('loginPassword').value;
+  var errEl = document.getElementById('loginError');
+  var btn = event.target;
+  if (!email||!password) { errEl.textContent='Remplissez tous les champs'; errEl.style.display='block'; return; }
+  btn.textContent='Connexion...'; btn.disabled=true; errEl.style.display='none';
+  auth.signInWithEmailAndPassword(email, password)
+    .then(function(){ showToast('Connexion réussie !','success'); })
+    .catch(function(e){
+      var msg='Email ou mot de passe incorrect';
+      if(e.code==='auth/user-not-found') msg='Compte introuvable';
+      if(e.code==='auth/wrong-password') msg='Mot de passe incorrect';
+      if(e.code==='auth/too-many-requests') msg='Trop de tentatives';
+      errEl.textContent=msg; errEl.style.display='block';
+      btn.textContent='Se connecter'; btn.disabled=false;
+    });
+}
+
+function doSignup() {
+  var name = document.getElementById('signupName').value.trim();
+  var phone = document.getElementById('signupPhone').value.trim();
+  var email = document.getElementById('signupEmail').value.trim();
+  var password = document.getElementById('signupPassword').value;
+  var errEl = document.getElementById('signupError');
+  var btn = event.target;
+  if(!name||!phone||!email||!password){ errEl.textContent='Remplissez tous les champs'; errEl.style.display='block'; return; }
+  if(password.length<6){ errEl.textContent='Minimum 6 caractères'; errEl.style.display='block'; return; }
+  btn.textContent='Création...'; btn.disabled=true;
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(function(cred){
+      return cred.user.updateProfile({displayName:name}).then(function(){
+        return db.collection('users').doc(cred.user.uid).set({name:name,phone:phone,email:email,createdAt:new Date().toISOString()});
+      });
+    })
+    .then(function(){ showToast('Compte créé ! Bienvenue 🎉','success'); })
+    .catch(function(e){
+      var msg='Erreur lors de la création';
+      if(e.code==='auth/email-already-in-use') msg='Email déjà utilisé';
+      errEl.textContent=msg; errEl.style.display='block';
+      btn.textContent='Créer mon compte'; btn.disabled=false;
+    });
+}
+
+function doLogout() {
+  if(!confirm('Se déconnecter ?')) return;
+  auth.signOut().then(function(){ showToast('Déconnecté'); });
+}
+
+function doResetPassword() {
+  var email = document.getElementById('loginEmail').value.trim();
+  if(!email){ showToast("Entrez votre email d'abord",'error'); return; }
+  auth.sendPasswordResetEmail(email)
+    .then(function(){ showToast('Email envoyé !','success'); })
+    .catch(function(){ showToast('Email introuvable','error'); });
+}
+
+function showOrders() {
+  document.getElementById('mainMenu').style.display='none';
+  document.getElementById('ordersView').style.display='block';
+  var user = auth.currentUser;
+  if(!user) return;
+  var list = document.getElementById('ordersList');
+  list.innerHTML='<div class="order-empty">Chargement...</div>';
+  db.collection('orders').where('email','==',user.email).get()
+    .then(function(snap){
+      if(snap.empty){ list.innerHTML='<div class="order-empty">Aucune commande pour l\'instant.</div>'; return; }
+      var html='';
+      snap.forEach(function(d){
+        var o=Object.assign({id:d.id},d.data());
+        var statusMap={new:['status-new','Nouvelle'],processing:['status-processing','En cours'],delivered:['status-delivered','Livré'],cancelled:['status-cancelled','Annulé']};
+        var st=statusMap[o.status]||['status-new','Nouvelle'];
+        var items=(o.items||[]).map(function(i){return i.name;}).join(', ');
+        var date=o.createdAt&&o.createdAt.toDate?o.createdAt.toDate().toLocaleDateString('fr-FR'):'';
+        var total=new Intl.NumberFormat('fr-FR').format(o.totalPrice||0)+' F';
+        html+='<div class="order-card"><div class="order-header"><span class="order-num">N° '+(o.orderNumber||o.id.slice(-8))+'</span><span class="order-status '+st[0]+'">'+st[1]+'</span></div><div style="font-size:11px;color:#888;margin-bottom:6px;">'+date+' • '+(o.city||'')+'</div><div style="font-size:12px;color:#666;margin-bottom:6px;">'+items+'</div><div style="font-size:15px;font-weight:900;color:#1B3A8C;">'+total+'</div></div>';
+      });
+      list.innerHTML=html;
+    })
+    .catch(function(){ list.innerHTML='<div class="order-empty">Erreur de chargement</div>'; });
+}
+
+function hideOrders() {
+  document.getElementById('mainMenu').style.display='block';
+  document.getElementById('ordersView').style.display='none';
+}
+
+auth.onAuthStateChanged(function(user){
+  if(user){
+    document.getElementById('viewGuest').style.display='none';
+    document.getElementById('viewUser').style.display='block';
+    document.getElementById('userName').textContent=user.displayName||'Mon Compte';
+    document.getElementById('userEmail').textContent=user.email;
   } else {
-    document.getElementById('viewGuest').style.display = 'block';
-    document.getElementById('viewUser').style.display = 'none';
+    document.getElementById('viewGuest').style.display='block';
+    document.getElementById('viewUser').style.display='none';
   }
 });
-
-window.switchTab = function(tab) {
-  document.getElementById('tabLogin').className = 'tab' + (tab==='login' ? ' active' : '');
-  document.getElementById('tabSignup').className = 'tab' + (tab==='signup' ? ' active' : '');
-  document.getElementById('formLogin').style.display = tab==='login' ? 'block' : 'none';
-  document.getElementById('formSignup').style.display = tab==='signup' ? 'block' : 'none';
-};
-
-window.doLogin = async function() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
-  const errEl = document.getElementById('loginError');
-  const btn = document.getElementById('loginBtn');
-  if (!email || !password) { errEl.textContent='Remplissez tous les champs'; errEl.style.display='block'; return; }
-  btn.textContent = 'Connexion...'; btn.disabled = true; errEl.style.display='none';
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    showToast('Connexion réussie !', 'success');
-  } catch(e) {
-    let msg = 'Email ou mot de passe incorrect';
-    if (e.code==='auth/user-not-found') msg='Compte introuvable';
-    if (e.code==='auth/wrong-password') msg='Mot de passe incorrect';
-    if (e.code==='auth/too-many-requests') msg='Trop de tentatives';
-    errEl.textContent = msg; errEl.style.display='block';
-    btn.textContent='Se connecter'; btn.disabled=false;
-  }
-};
-
-window.doSignup = async function() {
-  const name = document.getElementById('signupName').value.trim();
-  const phone = document.getElementById('signupPhone').value.trim();
-  const email = document.getElementById('signupEmail').value.trim();
-  const password = document.getElementById('signupPassword').value;
-  const errEl = document.getElementById('signupError');
-  const btn = document.getElementById('signupBtn');
-  if (!name||!phone||!email||!password) { errEl.textContent='Remplissez tous les champs'; errEl.style.display='block'; return; }
-  if (password.length<6) { errEl.textContent='Minimum 6 caractères'; errEl.style.display='block'; return; }
-  btn.textContent='Création...'; btn.disabled=true;
-  try {
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
-    await updateProfile(cred.user, {displayName: name});
-    await setDoc(doc(db,'users',cred.user.uid), {name, phone, email, createdAt: new Date().toISOString()});
-    showToast('Compte créé !', 'success');
-  } catch(e) {
-    let msg='Erreur lors de la création';
-    if (e.code==='auth/email-already-in-use') msg='Email déjà utilisé';
-    errEl.textContent=msg; errEl.style.display='block';
-    btn.textContent='Créer mon compte'; btn.disabled=false;
-  }
-};
-
-window.doLogout = async function() {
-  if (!confirm('Se déconnecter ?')) return;
-  await signOut(auth);
-  showToast('Déconnecté');
-};
-
-window.doResetPassword = async function() {
-  const email = document.getElementById('loginEmail').value.trim();
-  if (!email) { showToast("Entrez votre email d'abord", 'error'); return; }
-  try { await sendPasswordResetEmail(auth, email); showToast('Email envoyé !', 'success'); }
-  catch(e) { showToast('Email introuvable', 'error'); }
-};
-
-window.showOrders = async function() {
-  document.getElementById('mainMenu').style.display = 'none';
-  document.getElementById('ordersView').style.display = 'block';
-  const user = auth.currentUser;
-  if (!user) return;
-  const list = document.getElementById('ordersList');
-  list.innerHTML = '<div class="order-empty">Chargement...</div>';
-  try {
-    const snap = await getDocs(query(collection(db,'orders'), where('email','==',user.email)));
-    if (snap.empty) { list.innerHTML='<div class="order-empty">Aucune commande pour l'instant.</div>'; return; }
-    let html = '';
-    snap.forEach(d => {
-      const o = {id:d.id,...d.data()};
-      const statusMap = {new:['status-new','Nouvelle'],processing:['status-processing','En cours'],delivered:['status-delivered','Livré'],cancelled:['status-cancelled','Annulé']};
-      const [sc,sl] = statusMap[o.status]||['status-new','Nouvelle'];
-      const items = (o.items||[]).map(i=>i.name).join(', ');
-      const date = o.createdAt?.toDate ? o.createdAt.toDate().toLocaleDateString('fr-FR') : '';
-      html += `<div class="order-card">
-        <div class="order-header"><span class="order-num">N° ${o.orderNumber||o.id.slice(-8)}</span><span class="order-status ${sc}">${sl}</span></div>
-        <div style="font-size:11px;color:#888;margin-bottom:6px;">${date} • ${o.city||''}</div>
-        <div style="font-size:12px;color:#666;margin-bottom:6px;">${items}</div>
-        <div style="font-size:15px;font-weight:900;color:#1B3A8C;">${fmt(o.totalPrice||0)}</div>
-      </div>`;
-    });
-    list.innerHTML = html;
-  } catch(e) { list.innerHTML='<div class="order-empty">Erreur de chargement</div>'; }
-};
-
-window.hideOrders = function() {
-  document.getElementById('mainMenu').style.display = 'block';
-  document.getElementById('ordersView').style.display = 'none';
-};
 </script>
 </body>
-</html><script>
-// ── Attacher tous les événements après chargement ──
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('tabLogin')?.addEventListener('click', () => { if(window.switchTab) window.switchTab('login'); });
-  document.getElementById('tabSignup')?.addEventListener('click', () => { if(window.switchTab) window.switchTab('signup'); });
-  document.getElementById('loginBtn')?.addEventListener('click', () => { if(window.doLogin) window.doLogin(); });
-  document.getElementById('forgotLink')?.addEventListener('click', () => { if(window.doResetPassword) window.doResetPassword(); });
-  document.getElementById('signupBtn')?.addEventListener('click', () => { if(window.doSignup) window.doSignup(); });
-  document.getElementById('logoutBtn')?.addEventListener('click', () => { if(window.doLogout) window.doLogout(); });
-  document.getElementById('showOrdersBtn')?.addEventListener('click', () => { if(window.showOrders) window.showOrders(); });
-  document.getElementById('hideOrdersBtn')?.addEventListener('click', () => { if(window.hideOrders) window.hideOrders(); });
-});
-</script>
+</html>
