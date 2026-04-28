@@ -427,59 +427,95 @@ body { font-family:'Segoe UI',sans-serif; background:var(--gray); color:var(--te
 
       <!-- ══ DASHBOARD ══ -->
       <div id="tab-dashboard" class="tab-content active">
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#dbeafe;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
-            </div>
-            <div>
-              <div class="stat-num" id="statProducts">—</div>
-              <div class="stat-label">Produits</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#dcfce7;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
-            </div>
-            <div>
-              <div class="stat-num" id="statOrders">—</div>
-              <div class="stat-label">Commandes</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#fef3c7;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-            </div>
-            <div>
-              <div class="stat-num" id="statPending">—</div>
-              <div class="stat-label">En attente</div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon" style="background:#ede9fe;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5b21b6" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-            </div>
-            <div>
-              <div class="stat-num" id="statRevenue">—</div>
-              <div class="stat-label">Chiffre d'affaires</div>
-            </div>
-          </div>
-        </div>
 
-        <!-- Dernières commandes -->
-        <div class="card">
-          <div class="card-header">
-            <h3>Dernières commandes</h3>
-            <button class="btn-sm btn-view" onclick="showTab('orders')">Voir tout</button>
-          </div>
-          <div class="card-body" style="padding:0;">
-            <div id="recentOrders"><div class="loading"><div class="spinner"></div> Chargement...</div></div>
-          </div>
-        </div>
-      </div>
+  <!-- WELCOME BANNER -->
+  <div style="background:linear-gradient(135deg,#1B3A8C 0%,#2650c8 50%,#3b6fd4 100%);border-radius:16px;padding:24px;margin-bottom:20px;color:#fff;display:flex;align-items:center;justify-content:space-between;">
+    <div>
+      <div style="font-size:13px;opacity:.8;margin-bottom:4px;">Bienvenue sur</div>
+      <div style="font-size:24px;font-weight:900;font-style:italic;letter-spacing:-1px;">Orakel Admin</div>
+      <div style="font-size:12px;opacity:.75;margin-top:4px;" id="dashDate"></div>
+    </div>
+    <div style="background:rgba(255,255,255,.15);border-radius:12px;padding:12px 16px;text-align:center;">
+      <svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6" stroke="white" stroke-width="1.5"/></svg>
+    </div>
+  </div>
 
-      <!-- ══ PRODUITS ══ -->
-      <div id="tab-products" class="tab-content">
+  <!-- STAT CARDS -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+
+    <!-- Produits -->
+    <div style="background:linear-gradient(135deg,#1B3A8C,#2650c8);border-radius:14px;padding:18px;color:#fff;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-10px;right:-10px;width:60px;height:60px;background:rgba(255,255,255,.1);border-radius:50%;"></div>
+      <div style="position:absolute;top:10px;right:10px;width:35px;height:35px;background:rgba(255,255,255,.1);border-radius:50%;"></div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2" width="22" height="22"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+      <div style="font-size:28px;font-weight:900;margin:8px 0 2px;" id="statProducts">—</div>
+      <div style="font-size:12px;opacity:.85;">Produits</div>
+    </div>
+
+    <!-- Commandes -->
+    <div style="background:linear-gradient(135deg,#16a34a,#22c55e);border-radius:14px;padding:18px;color:#fff;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-10px;right:-10px;width:60px;height:60px;background:rgba(255,255,255,.1);border-radius:50%;"></div>
+      <div style="position:absolute;top:10px;right:10px;width:35px;height:35px;background:rgba(255,255,255,.1);border-radius:50%;"></div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2" width="22" height="22"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+      <div style="font-size:28px;font-weight:900;margin:8px 0 2px;" id="statOrders">—</div>
+      <div style="font-size:12px;opacity:.85;">Commandes</div>
+    </div>
+
+    <!-- En attente -->
+    <div style="background:linear-gradient(135deg,#f59e0b,#fbbf24);border-radius:14px;padding:18px;color:#fff;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-10px;right:-10px;width:60px;height:60px;background:rgba(255,255,255,.1);border-radius:50%;"></div>
+      <div style="position:absolute;top:10px;right:10px;width:35px;height:35px;background:rgba(255,255,255,.1);border-radius:50%;"></div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2" width="22" height="22"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <div style="font-size:28px;font-weight:900;margin:8px 0 2px;" id="statPending">—</div>
+      <div style="font-size:12px;opacity:.85;">En attente</div>
+    </div>
+
+    <!-- Revenus -->
+    <div style="background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:14px;padding:18px;color:#fff;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-10px;right:-10px;width:60px;height:60px;background:rgba(255,255,255,.1);border-radius:50%;"></div>
+      <div style="position:absolute;top:10px;right:10px;width:35px;height:35px;background:rgba(255,255,255,.1);border-radius:50%;"></div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2" width="22" height="22"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      <div style="font-size:20px;font-weight:900;margin:8px 0 2px;" id="statRevenue">—</div>
+      <div style="font-size:12px;opacity:.85;">Revenus (F CFA)</div>
+    </div>
+
+  </div>
+
+  <!-- ACTIONS RAPIDES -->
+  <div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.06);">
+    <div style="font-size:14px;font-weight:900;color:#222;margin-bottom:12px;">Actions rapides</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <button onclick="showTab('products')" style="background:#e8f0ff;color:#1B3A8C;border:none;border-radius:10px;padding:12px 8px;font-weight:800;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1B3A8C" stroke-width="2" width="14" height="14"><path d="M12 5v14M5 12h14"/></svg>
+        Ajouter produit
+      </button>
+      <button onclick="showTab('orders')" style="background:#dcfce7;color:#16a34a;border:none;border-radius:10px;padding:12px 8px;font-weight:800;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" width="14" height="14"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/></svg>
+        Voir commandes
+      </button>
+      <button onclick="showTab('categories')" style="background:#fef3c7;color:#f59e0b;border:none;border-radius:10px;padding:12px 8px;font-weight:800;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Catégories
+      </button>
+      <button onclick="showTab('subcategories')" style="background:#ede9fe;color:#7c3aed;border:none;border-radius:10px;padding:12px 8px;font-weight:800;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" width="14" height="14"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Sous-catégories
+      </button>
+    </div>
+  </div>
+
+  <!-- DERNIÈRES COMMANDES -->
+  <div style="background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div style="font-size:14px;font-weight:900;color:#222;">Dernières commandes</div>
+      <button onclick="showTab('orders')" style="background:none;border:none;color:#1B3A8C;font-size:12px;font-weight:800;cursor:pointer;">Voir tout →</button>
+    </div>
+    <div id="recentOrders"><div style="text-align:center;padding:20px;color:#888;font-size:13px;">Chargement...</div></div>
+  </div>
+
+</div>
+
+<div id="tab-products" class="tab-content">
         <div class="card">
           <div class="card-header">
             <h3>Gestion des produits</h3>
@@ -1137,7 +1173,7 @@ async function loadProducts() {
   el.innerHTML = '<div class="loading"><div class="spinner"></div> Chargement...</div>';
 
   try {
-    const snapshot = await getDocs(query(collection(db, "products"), orderBy("createdAt", "desc")));
+    const snapshot = await getDocs(query(collection(db, "products"), orderBy("name", "asc")));
     if (snapshot.empty) {
       el.innerHTML = '<div class="empty-state"><p>Aucun produit. Ajoutez votre premier produit !</p></div>';
       return;
@@ -1367,7 +1403,7 @@ async function loadCategories() {
   const el = document.getElementById('categoriesList');
   el.innerHTML = '<div class="loading"><div class="spinner"></div> Chargement...</div>';
   try {
-    const snapshot = await getDocs(collection(db, "categories"));
+    const snapshot = await getDocs(query(collection(db, "categories"), orderBy("name", "asc")));
     if (snapshot.empty) {
       el.innerHTML = '<div class="empty-state"><p>Aucune catégorie. Ajoutez-en une !</p></div>';
       return;
@@ -1747,7 +1783,7 @@ async function loadSubcats() {
   if (!el) return;
   el.innerHTML = '<div class="loading"><div class="spinner"></div> Chargement...</div>';
   try {
-    const snap = await getDocs(collection(db, 'subcategories'));
+    const snap = await getDocs(query(collection(db, 'subcategories'), orderBy('name', 'asc')));
     if (snap.empty) {
       el.innerHTML = '<div style="padding:24px;text-align:center;color:#888;">Aucune sous-catégorie — cliquez + Ajouter</div>';
       return;
@@ -1887,89 +1923,25 @@ window.saveBrand = async function() {
   } catch(e) { showToast('Erreur: ' + e.message, 'error'); }
 };
 
-window.handleCatBannerUpload = async function(input) {
+window.handleCatBannerUpload = function(input) {
   const file = input.files[0];
   if (!file) return;
-
-  const preview = document.getElementById('catBannerPreview');
-
-  // Afficher aperçu local immédiatement
-  const readerLocal = new FileReader();
-  readerLocal.onload = e => {
-    preview.src = e.target.result;
-    preview.style.display = 'block';
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('catBannerUrl').value = e.target.result;
+    const p = document.getElementById('catBannerPreview');
+    p.src = e.target.result;
+    p.style.display = 'block';
   };
-  readerLocal.readAsDataURL(file);
-
-  // Compresser si l'image est trop grande (> 800KB)
-  async function compressImage(file, maxKB = 800) {
-    return new Promise(resolve => {
-      const img = new Image();
-      const url = URL.createObjectURL(file);
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let w = img.width, h = img.height;
-        // Réduire si trop large
-        if (w > 1200) { h = Math.round(h * 1200 / w); w = 1200; }
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        // Qualité adaptative
-        let quality = 0.8;
-        let dataUrl = canvas.toDataURL('image/jpeg', quality);
-        while (dataUrl.length > maxKB * 1024 * 1.37 && quality > 0.3) {
-          quality -= 0.1;
-          dataUrl = canvas.toDataURL('image/jpeg', quality);
-        }
-        URL.revokeObjectURL(url);
-        // Convertir dataUrl → Blob
-        const arr = dataUrl.split(','), mime = arr[0].match(/:(.*?);/)[1];
-        const bstr = atob(arr[1]);
-        let n = bstr.length, u8arr = new Uint8Array(n);
-        while(n--) u8arr[n] = bstr.charCodeAt(n);
-        resolve(new Blob([u8arr], {type: mime}));
-      };
-      img.src = url;
-    });
-  }
-
-  // Upload vers Firebase Storage (priorité)
-  if (storageAvailable) {
-    try {
-      showToast('Upload bannière en cours...', 'info');
-      const compressed = await compressImage(file, 700);
-      const storageRef = ref(storage, `banners/${Date.now()}_${file.name.replace(/\s+/g,'_')}`);
-      const uploadTask = uploadBytesResumable(storageRef, compressed);
-      uploadTask.on('state_changed',
-        null,
-        err => { showToast('Erreur upload: ' + err.message, 'error'); },
-        async () => {
-          const url = await getDownloadURL(uploadTask.snapshot.ref);
-          document.getElementById('catBannerUrl').value = url;
-          showToast('✅ Bannière uploadée sur Firebase Storage !', 'success');
-        }
-      );
-    } catch(e) {
-      showToast('Storage indispo, compression en cours...', 'info');
-      // Fallback: base64 compressé
-      const compressed = await compressImage(file, 700);
-      const reader2 = new FileReader();
-      reader2.onload = ev => {
-        document.getElementById('catBannerUrl').value = ev.target.result;
-        showToast('Bannière ajoutée (compressée)', 'success');
-      };
-      reader2.readAsDataURL(compressed);
-    }
-  } else {
-    // Fallback: base64 compressé
-    const compressed = await compressImage(file, 700);
-    const reader2 = new FileReader();
-    reader2.onload = ev => {
-      document.getElementById('catBannerUrl').value = ev.target.result;
-      showToast('Bannière ajoutée (compressée)', 'success');
-    };
-    reader2.readAsDataURL(compressed);
-  }
+  reader.readAsDataURL(file);
 };
+
+// Dashboard date
+const dashDate = document.getElementById('dashDate');
+if (dashDate) {
+  const now = new Date();
+  dashDate.textContent = now.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+}
 </script>
 
 <!-- WHATSAPP FLOAT -->
