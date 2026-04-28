@@ -73,16 +73,16 @@ body{font-family:'Nunito',sans-serif;font-style:italic;background:#f5f5f5;color:
 <!-- VUE NON CONNECTÉ -->
 <div id="viewGuest">
   <div class="tabs">
-    <div class="tab active" id="tabLogin" onclick="switchTab('login')">Se connecter</div>
-    <div class="tab" id="tabSignup" onclick="switchTab('signup')">Créer un compte</div>
+    <div class="tab active" id="tabLogin">Se connecter</div>
+    <div class="tab" id="tabSignup">Créer un compte</div>
   </div>
   <div id="formLogin">
     <div class="form-section">
       <h3>Bon retour sur Orakel</h3>
       <div class="form-group"><label class="form-label">Email *</label><input type="email" id="loginEmail" class="form-input" placeholder="vous@email.com"></div>
       <div class="form-group"><label class="form-label">Mot de passe *</label><input type="password" id="loginPassword" class="form-input" placeholder="••••••••"><div class="error-msg" id="loginError"></div></div>
-      <button class="btn-primary" onclick="doLogin()" id="loginBtn">Se connecter</button>
-      <span class="forgot-link" onclick="doResetPassword()">Mot de passe oublié ?</span>
+      <button class="btn-primary" id="loginBtn">Se connecter</button>
+      <span class="forgot-link" id="forgotLink">Mot de passe oublié ?</span>
     </div>
     <div class="divider">ou</div>
     <div style="margin:0 12px 10px;"><button class="btn-outline" onclick="location.href='panier.html'">Continuer sans compte</button></div>
@@ -100,7 +100,7 @@ body{font-family:'Nunito',sans-serif;font-style:italic;background:#f5f5f5;color:
       <div class="form-group"><label class="form-label">Téléphone *</label><input type="tel" id="signupPhone" class="form-input" placeholder="+225 07 XX XX XX"></div>
       <div class="form-group"><label class="form-label">Email *</label><input type="email" id="signupEmail" class="form-input" placeholder="vous@email.com"></div>
       <div class="form-group"><label class="form-label">Mot de passe *</label><input type="password" id="signupPassword" class="form-input" placeholder="Minimum 6 caractères"><div class="error-msg" id="signupError"></div></div>
-      <button class="btn-primary" onclick="doSignup()" id="signupBtn">Créer mon compte</button>
+      <button class="btn-primary" id="signupBtn">Créer mon compte</button>
     </div>
   </div>
 </div>
@@ -114,9 +114,9 @@ body{font-family:'Nunito',sans-serif;font-style:italic;background:#f5f5f5;color:
   </div>
   <div id="mainMenu">
     <div class="menu-list">
-      <div class="menu-item" onclick="showOrders()">
+      <div class="menu-item" >
         <div class="menu-icon" style="background:#e8f0ff;"><svg viewBox="0 0 24 24" fill="none" stroke="#1B3A8C" stroke-width="2" width="18" height="18"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2"/></svg></div>
-        <span class="menu-text">Mes commandes</span>
+        <span class="menu-text" id="showOrdersBtn">Mes commandes</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg>
       </div>
       <a class="menu-item" href="favoris.html">
@@ -134,15 +134,15 @@ body{font-family:'Nunito',sans-serif;font-style:italic;background:#f5f5f5;color:
         <span class="menu-text">Nous contacter</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg>
       </a>
-      <div class="menu-item" onclick="doLogout()">
+      <div class="menu-item" >
         <div class="menu-icon" style="background:#fef2f2;"><svg viewBox="0 0 24 24" fill="none" stroke="#e8002d" stroke-width="2" width="18" height="18"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div>
-        <span class="menu-text" style="color:#e8002d;">Se déconnecter</span>
+        <span class="menu-text" style="color:#e8002d;" id="logoutBtn">Se déconnecter</span>
       </div>
     </div>
   </div>
   <div id="ordersView" style="display:none;padding-top:10px;">
     <div style="display:flex;align-items:center;gap:10px;padding:0 16px 10px;">
-      <button onclick="hideOrders()" style="background:none;border:none;cursor:pointer;color:#1B3A8C;font-size:13px;font-weight:800;font-family:'Nunito',sans-serif;font-style:italic;">← Retour</button>
+      <button  style="background:none;border:none;cursor:pointer;color:#1B3A8C;font-size:13px;font-weight:800;font-family:'Nunito',sans-serif;font-style:italic;" id="hideOrdersBtn">← Retour</button>
       <span style="font-size:15px;font-weight:900;">Mes commandes</span>
     </div>
     <div id="ordersList"></div>
@@ -290,4 +290,16 @@ window.hideOrders = function() {
 };
 </script>
 </body>
-</html>
+</html><script>
+// ── Attacher tous les événements après chargement ──
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('tabLogin')?.addEventListener('click', () => { if(window.switchTab) window.switchTab('login'); });
+  document.getElementById('tabSignup')?.addEventListener('click', () => { if(window.switchTab) window.switchTab('signup'); });
+  document.getElementById('loginBtn')?.addEventListener('click', () => { if(window.doLogin) window.doLogin(); });
+  document.getElementById('forgotLink')?.addEventListener('click', () => { if(window.doResetPassword) window.doResetPassword(); });
+  document.getElementById('signupBtn')?.addEventListener('click', () => { if(window.doSignup) window.doSignup(); });
+  document.getElementById('logoutBtn')?.addEventListener('click', () => { if(window.doLogout) window.doLogout(); });
+  document.getElementById('showOrdersBtn')?.addEventListener('click', () => { if(window.showOrders) window.showOrders(); });
+  document.getElementById('hideOrdersBtn')?.addEventListener('click', () => { if(window.hideOrders) window.hideOrders(); });
+});
+</script>
