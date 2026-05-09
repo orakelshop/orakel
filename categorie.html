@@ -43,7 +43,12 @@ body{font-family:'Nunito',sans-serif;font-style:italic;background:#f5f5f5;color:
 .products-section{padding:0 8px 8px;}
 .products-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 @media(min-width:600px){.products-grid{grid-template-columns:repeat(3,1fr);}}
-@media(min-width:900px){.products-grid{grid-template-columns:repeat(4,1fr);max-width:1200px;margin:0 auto;}}
+@media(min-width:900px){.products-grid{grid-template-columns:repeat(5,1fr);max-width:1400px;margin:0 auto;}}
+@media(min-width:900px){
+  #subcatCards { gap:16px !important; padding:0 0 10px !important; }
+  #subcatCards > div { min-width:100px !important; }
+  #subcatCards > div > div:first-child { width:100px !important; height:100px !important; }
+}
 
 .product-card{border:1px solid #eee;border-radius:12px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;text-decoration:none;color:inherit;background:#fff;display:block;}
 .product-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.1);}
@@ -350,7 +355,7 @@ async function loadSubcategories() {
       const s = { id: d.id, ...d.data() };
       html += `<div onclick="filterBySubcat('${s.name}',this)" style="flex-shrink:0;cursor:pointer;text-align:center;min-width:80px;">
         <div style="width:80px;height:80px;border-radius:12px;overflow:hidden;border:2px solid transparent;margin:0 auto;">
-          ${s.image ? `<img src="${s.image}" style="width:100%;height:100%;object-fit:cover;">` : `<div style="width:100%;height:100%;background:#f0f4ff;display:flex;align-items:center;justify-content:center;font-size:28px;">📦</div>`}
+          ${s.image ? `<img src="${s.image}" style="width:100%;height:100%;object-fit:cover;display:block;">` : `<div style="width:100%;height:100%;background:#e8f0ff;display:flex;align-items:center;justify-content:center;font-size:28px;">📦</div>`}
         </div>
         <div style="font-size:11px;font-weight:800;margin-top:5px;color:#444;">${s.name}</div>
       </div>`;
