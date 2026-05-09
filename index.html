@@ -316,9 +316,9 @@ footer {
   .categories-scroll { overflow-x:visible; }
   .categories-grid {
     display:grid !important;
-    grid-template-columns:repeat(7, 1fr) !important;
     grid-template-rows:repeat(3, auto) !important;
-    grid-auto-flow:row !important;
+    grid-auto-flow:column !important;
+    grid-auto-columns: calc((100% - 6*16px) / 7) !important;
     width:100% !important;
     gap:16px !important;
   }
@@ -590,22 +590,22 @@ footer {
     <div class="slide slide-1">
       <h2>Bienvenue sur Orakel</h2>
       <p>Votre marketplace en Côte d'Ivoire</p>
-      <button class="slide-btn">Découvrir</button>
+      <button class="slide-btn" onclick="window.location.href='categorie.html'">Découvrir</button>
     </div>
     <div class="slide slide-2">
       <h2>Des milliers de produits</h2>
       <p>Mode, Tech, Maison & bien plus</p>
-      <button class="slide-btn">Voir les catégories</button>
+      <button class="slide-btn" onclick="window.location.href='categorie.html'">Voir les catégories</button>
     </div>
     <div class="slide slide-3">
       <h2>Livraison Rapide</h2>
       <p>Partout en Côte d'Ivoire</p>
-      <button class="slide-btn">En savoir plus</button>
+      <button class="slide-btn" onclick="window.location.href='compte.html'">En savoir plus</button>
     </div>
     <div class="slide slide-4">
       <h2>Paiement à la Livraison</h2>
       <p>Wave · Orange Money · MTN · Visa</p>
-      <button class="slide-btn">En savoir plus</button>
+      <button class="slide-btn" onclick="window.location.href='compte.html'">En savoir plus</button>
     </div>
   </div>
   <div class="slide-dots">
